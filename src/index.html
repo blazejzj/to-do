@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>TO-DO by blazejzj</title>
-    </head>
-    <body>
-        <div class="container">
-            <header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-DO by blazejzj</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div id="logo">
                 <div id="todo-icon"></div>
                 <h1>TO-DO</h1>
-            </header>
-            <div class="menu">
-                <div id="to-dos">
-                    <h2 class="bullet-point">TO-DO</h2>
-                </div>
-                <div id="projects">
-                    <h2 class="bullet-point">Projects</h2>
-
-                </div>
             </div>
-            <div id="content">
-                
+                <div class="hamburger-menu-container">
+                    <img src="/asset/hamburger.svg" alt="menu">
+                </div>
+        </header>
+        <div class="menu-container">
+            <div id="home">
+                <h2>Home</h2>
+                <button>All Tasks</button>
+                <button>Today</button>
+                <button>This Week</button>
+                <Button>This Month</Button>
+                <button>Important</button>
+            </div>
+            <div id="projects">
+                <h2>Projects</h2>
             </div>
         </div>
-    </body>
+        <div id="content">
+        </div>
+    </div>
+</body>
 </html>

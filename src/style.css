@@ -1,60 +1,245 @@
 *, *::before, *::after {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-@media only screen and (min-width: 1200px ) {
-    
-    body,html  {
-        width: 100%;
-        height: 100%;
+body, html {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container {
+    background: #fff;
+    border-radius: 10px;
+    display: grid;
+    grid-template-areas: 
+        "header header header"
+        "menu content content"
+        "menu content content";
+    grid-template-columns: 1fr repeat(2, 2fr);
+    grid-template-rows: 1fr repeat(2, 4fr);
+    transition: all 0.3s ease-in-out;
+}
+
+header {
+    grid-area: header;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: blue;
+    padding: 1rem;
+
+    #logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+    }
+}
+
+
+#home, #projects {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    gap: 1rem;
+}
+
+h2 {
+    border-bottom: 1px solid black;
+    width: 100%;
+}
+
+#todo-icon {
+    background-image: url(/asset/clipboard-edit-outline.svg);
+    width: 30px;
+    height: 30px;
+}
+
+.menu-container {
+    grid-area: menu;
+    background-color: red;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.hamburger-menu-container {
+    display: none;
+}
+
+.content {
+    grid-area: content;
+}
+
+@media only screen and (min-width: 1200px) {
+    body, html {
         background-image: url(../asset/background.jpeg);
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
     }
     
     .container {
-        background: #fff;
-        width: 1000px;
-        height: 700px;
-        min-width: 300;
-        border-radius: 10px;
-        /* going to layout everything in grid */
-
-        header {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0px 5px 5px #d3d3d3;
-            padding: 1rem;
-            h1 {
-                /* font styles not decided yet*/
-            }
-            #todo-icon {
-                background-image: url(/asset/clipboard-edit-outline.svg);
-                width: 30px;
-                height: 30px;
-            }
-        }
-
-        .bullet-point {
-            display: list-item;
-        }
+        width: 1200px;
+        height: 800px;
+        min-width: 300px;
     }
 }
 
+@media only screen and (max-width: 650px) {
+    header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        width: 100%;
 
+        #logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            margin-left: 1rem;
+            flex-wrap: nowrap;
+            #todo-icon {
+                min-width: 30px;
+                min-height: 30px;
+            }
+        }
 
-
-@media only screen and (max-width: 600px) {
-    body {
-      background-color: lightblue;
+        .hamburger-menu-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            min-width: 40px;
+            min-height: 40px;
+            width: 40px;
+            height: 40px;
+            margin-right: 1rem;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
     }
-  }
+
+    .container {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    } 
+
+
+    .menu-container {
+        position: absolute;
+        top: 100%; 
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 60px); 
+        background-color: rgba(255, 255, 255, 0.7); 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        margin-top: 3rem;
+        transform: translateY(0); 
+        transition: transform 0.3s ease-out; 
+        z-index: 1;
+
+        #home {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        #projects {
+            width: 100%;
+        }
+
+        h2 {
+            border-bottom: 1px solid black;
+            width: 100%;
+        }
+    }
+
+    .menu-container.active {
+        transform: translateY(-100%);
+    }
+
+    
+}
+
+@media (min-width: 651px) and (max-width: 1199px) {
+    body, html {
+        background: none; 
+    }
+
+    .container {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        grid-template-areas: 
+        "header header"
+        "menu content";
+        grid-template-columns: 1.2fr 4fr;
+        grid-template-rows: 1fr 8fr;
+    }
+
+    header {
+        grid-area: header;
+        #logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+        }
+
+    }
+
+    #home, #projects {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    h2 {
+        border-bottom: 1px solid black;
+        width: 100%;
+    }
+
+    #menu {
+        grid-area: menu;
+    }
+
+    #content {
+        grid-area: content;
+    }
+
+    .hamburger-menu-container {
+        display: none; 
+    }
+
+    header, .menu-container, .content {
+        width: 100%; 
+    }
+}
