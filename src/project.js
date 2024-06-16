@@ -1,7 +1,7 @@
 
 class Project {
 
-    static projectId = 0;
+    static projectId = 0 + 5; // starting at five because of static buttons in index page
 
     constructor(title) {
         this.title = title;

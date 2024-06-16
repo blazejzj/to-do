@@ -3,16 +3,13 @@ import { Project } from './project'
 import { DOMS } from './dom'
 import { Errors } from './errors';
 import { Task } from './task';
+import { projectManager } from './projectManager';
 
 
-
-// Placeholder for menu for now (mobile)
-const menuToggle = document.querySelector('.hamburger-menu-container img');
-const menuContainer = document.querySelector('.menu-container');
-const container = document.querySelector('.container');
-
-menuToggle.addEventListener('click', function() {
-    menuContainer.classList.toggle('active');
-    container.classList.toggle('menu-active');
+document.body.addEventListener('click', (event) => {
+    // Check if the clicked element is a button with a 'data-id'
+    if (event.target.tagName === 'BUTTON' && event.target.hasAttribute('data-id')) {
+        DOMS.selectButton(event.target);
+        console.log('Data-ID:', event.target.getAttribute('data-id'), 'Value:', event.target.textContent.trim());
+    }
 });
-

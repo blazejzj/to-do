@@ -12,45 +12,70 @@
                 <div id="todo-icon"></div>
                 <h1>TO-DO</h1>
             </div>
+
+            <!-- MOBILE HAMBURGER MENU -->
             <div class="hamburger-menu-container">
                 <img src="/asset/hamburger.svg" alt="menu">
             </div>
         </header>
+
+        <!-- // INTERACTIVE MENU ON THE SIDE TO DISPLAY TASKS  -->
         <div class="menu-container">
             <div id="home">
                 <h2>Home</h2>
                 <div class="buttonContainer">
-                    <button class="currently-visiting">All Tasks</button>
+                    <button data-selected="true" data-id="1">All Tasks</button>
                     <span class="task-counter">0</span>
                 </div>
                 <div class="buttonContainer">
-                    <button>Today</button>
+                    <button data-id="2">Today</button>
                     <span class="task-counter">0</span>
                 </div>
                 <div class="buttonContainer">
-                    <button>This Week</button>
+                    <button data-id="3">This Week</button>
                     <span class="task-counter">0</span>
                 </div>
                 <div class="buttonContainer">
-                    <button>This Month</button>
-                    <span class="task-counter">0</span>
-                </div>
-                <div class="buttonContainer">
-                    <button>Important</button>
+                    <button  data-id="4">This Month</button>
                     <span class="task-counter">0</span>
                 </div>
             </div>
+
+            <!-- CONTAINER FOR ALL PROJECTS -->
+            <h2>Projects</h2>
             <div id="projects">
-                <h2>Projects</h2>
-                <div class="buttonContainer project project-id-'0'">
-                    <button>Hello</button>
+
+                <!-- <div class="buttonContainer project">
+                    <button data-id="5">Hello</button>
                     <span class="task-counter">0</span>
-                </div>
+                </div> -->
             </div>
+
+        <!-- BUTTON FOR ADDING STUFF (PROJECT / TASK) -->
             <div id="addTaskContainer">
                 <button id="addTaskBtn"><span>+</span></button>
             </div>
         </div>
+
+        <!-- POP UP FORM FOR CREATING A NEW PROJECT -->
+        <div id="newProjectPopup" class="popup-container"">
+            <div class="popup-content">
+                <h2>Add New Project</h2>
+                <form id="newProjectForm">
+                    <div class="projectPopupInputContainer">
+                        <label for="projectTitle">Project Title:</label>
+                        <input type="text" id="projectTitle" name="projectTitle" required>
+                    </div>
+                    <div class="projectPopupButtonsContainer">
+                        <button type="submit" class="submit-btn">Add Project</button>
+                        <button type="button" class="cancel-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- CONTENT GOING TO BE DISPLAYED BASED ON THE CURRENTLY SELECTED PROJECT / MENU ITEM -->
         <div id="content">
             <div class="task-container">
                 <div class="task-completed">
