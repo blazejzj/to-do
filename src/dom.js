@@ -8,8 +8,9 @@ class DOMS {
     }
 
     static cacheDOMElements() {
+        // Get all necessary queries once
         this.projectsContainer = document.getElementById("projects");
-        this.addStuffBtn = document.getElementById("addTaskBtn");
+        this.addStuffBtn = document.getElementById("addProjectBtn");
         this.cancelBtn = document.querySelector('.cancel-btn');
         this.newProjectForm = document.getElementById('newProjectForm');
         this.newProjectPopup = document.getElementById('newProjectPopup');
@@ -19,12 +20,15 @@ class DOMS {
     }
 
     static bindEventListeners() {
+        // Event listeners
+        // Hamburger menu on mobile
         this.menuToggle.addEventListener('click', () => {
             this.menuContainer.classList.toggle('active');
             this.container.classList.toggle('menu-active');
         });
+        // Cancel button on add project
         this.cancelBtn.addEventListener('click', () => this.hideNewProjectPopup());
-        this.addStuffBtn.addEventListener("click", () => this.addProjectOrTask());
+        this.addStuffBtn.addEventListener("click", () => this.addNewProject());
         this.newProjectForm.addEventListener('submit', (event) => this.handleNewProjectFormSubmission(event));
     }
 
@@ -38,17 +42,9 @@ class DOMS {
         this.displayAllProjectsDOMS();
     }
 
-    static addProjectOrTask() {
-        const selectedButton = document.querySelector("[data-selected='true']");
-        if (selectedButton) {
-            const selectedId = parseInt(selectedButton.getAttribute('data-id'));
+    static addNewProject() {
             console.log("Button pressed, adding...");
-            if ([1, 2, 3, 4].includes(selectedId)) {
-                this.showNewProjectPopup();
-            } else {
-                console.log("Adding a new task to project: " + selectedId);
-            }
-        }
+            this.showNewProjectPopup();
     }
 
     static selectButton(newlySelectedButton) {
@@ -61,9 +57,10 @@ class DOMS {
 
     static createNewProjectDOM(project) {
         const container = document.createElement("div");
-        container.classList.add("buttonContainer", "project");
+        container.classList.add("project");
         const projectBtn = document.createElement("button");
         projectBtn.setAttribute("data-id", project.getId());
+        projectBtn.classList.add("buttonHover");
         projectBtn.textContent = project.getTitle();
         const spanCounter = document.createElement("span");
         spanCounter.classList.add("task-counter");
