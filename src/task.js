@@ -20,6 +20,10 @@ class Task {
     getTitle() {
         return this.title;
     }
+    
+    getId() {
+        return this.id;
+    }
 
     changeDescription(newDescription) {
         this.description = newDescription;
@@ -47,6 +51,8 @@ class Task {
     formattedDate() {
         return format(this.dueDate, 'MMMM d');
     }
+
+
 }
 
 export { Task };

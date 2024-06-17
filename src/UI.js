@@ -1,5 +1,6 @@
 import { projectManager } from './projectManager';
 import { DOMS } from './dom';
+import { Task } from './task';
 
 class UI {
     static createNewProjectDOM(project) {
@@ -29,11 +30,11 @@ class UI {
 
         const checkBoxTaskCompleted = document.createElement("input");
         checkBoxTaskCompleted.setAttribute("type", "checkbox");
-        checkBoxTaskCompleted.setAttribute("id", "task-completed");
-        checkBoxTaskCompleted.setAttribute("name", "task-completed");
+        checkBoxTaskCompleted.setAttribute("id", `task-completed-${task.getId()}`);
+        checkBoxTaskCompleted.setAttribute("name", `task-completed-${task.getId()}`);
 
         const taskTitle = document.createElement("h4");
-        taskTitle.textContent = task.getTitle();
+        taskTitle.textContent = task.title;
 
         taskContainerMain.append(checkBoxTaskCompleted, taskTitle);
         taskContainer.appendChild(taskContainerMain);
@@ -111,6 +112,15 @@ class UI {
         addTaskBtn.classList.add("add-new-task-btn");
         addTaskBtn.onclick = () => UI.showNewTaskPopup();
         taskContentContainer.appendChild(addTaskBtn);
+    }
+
+    static displayFilteredTasks(tasks) {
+        const taskContentContainer = document.getElementById("content");
+        taskContentContainer.innerHTML = "";
+        tasks.forEach(task => {
+            const taskDOM = UI.createNewTaskDOM(task);
+            taskContentContainer.appendChild(taskDOM);
+        });
     }
 }
 

@@ -8,6 +8,10 @@ class Errors {
     static emptyArray() {
         console.log("ERROR: ArrayList is empty")
     }
+
+    static unexpectedParam() {
+        console.log("ERROR: Unknown parameter sent");
+    }
 }
 
 export { Errors }

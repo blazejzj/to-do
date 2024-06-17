@@ -3,6 +3,7 @@ import { Project } from './project';
 import { projectManager } from './projectManager';
 import { Task } from './task';
 import { Errors } from './errors';
+import {startOfToday, endOfToday, addDays, startOfMonth, endOfMonth, addMonths } from 'date-fns';
 
 class DOMS {
     static init() {
@@ -34,6 +35,12 @@ class DOMS {
         this.cancelAddingProjectBtn.addEventListener('click', () => UI.hideNewProjectPopup());
         this.addProjectBtn.addEventListener("click", () => UI.showNewProjectPopup());
         this.newProjectForm.addEventListener('submit', (event) => this.handleNewProjectFormSubmission(event));
+
+        // Show tasks category by date buttons
+        document.getElementById("showAllTasks").addEventListener("click", () => this.filterTasks("all"));
+        document.getElementById('showDueTodayTasks').addEventListener('click', () => this.filterTasks('today'));
+        document.getElementById('showDueWeekTasks').addEventListener('click', () => this.filterTasks('week'));
+        document.getElementById('showDueMonthTasks').addEventListener('click', () => this.filterTasks('month'));
     }
 
     static handleNewProjectFormSubmission(event) {
@@ -99,6 +106,54 @@ class DOMS {
         } else {
             Errors.emptyArray();
         }
+    }
+
+    static filterTasks(dueType) {
+        // Fetch all tasks from all projects
+        const allAvailableTasks = [];
+        projectManager.getAllProjects().forEach((project) => {
+            project.getTasks().forEach((task) => {
+                allAvailableTasks.push(task);
+            });
+        });
+
+        let filteredTasks = [];
+        const today = startOfToday();
+        const endOfNext7Days = addDays(today, 7); 
+        const endOfNextMonth = addMonths(today, 1);
+        
+        switch(dueType) {
+            case 'all':
+                // Display all tasks
+                filteredTasks = allAvailableTasks;
+                break;
+            case 'today':
+                // Display tasks due today
+                filteredTasks = allAvailableTasks.filter(task => {
+                    const taskDueDate = new Date(task.dueDate);
+                    return taskDueDate >= startOfToday() && taskDueDate <= endOfToday();
+                });
+                break;
+            case 'week':
+                // Display tasks due this week
+                filteredTasks = allAvailableTasks.filter(task => {
+                    const taskDueDate = new Date(task.dueDate);
+                    return taskDueDate >= today && taskDueDate <= endOfNext7Days;
+                });
+                break;
+            case 'month':
+                // Display tasks due this month
+                filteredTasks = allAvailableTasks.filter(task => {
+                    const taskDueDate = new Date(task.dueDate);
+                    return taskDueDate >= today && taskDueDate <= endOfNextMonth;
+                });
+                break;
+            default:
+                Errors.unexpectedParam();
+        }
+
+        // Display filtered tasks
+        UI.displayFilteredTasks(filteredTasks);
     }
 }
 
