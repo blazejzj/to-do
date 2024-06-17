@@ -1,8 +1,8 @@
+import { UI } from './UI';
 import { Project } from './project';
 import { projectManager } from './projectManager';
-import { Errors } from './errors';
-import { add } from 'date-fns';
 import { Task } from './task';
+import { Errors } from './errors';
 
 class DOMS {
     static init() {
@@ -11,7 +11,7 @@ class DOMS {
     }
 
     static cacheDOMElements() {
-        // Get all necessary queries once
+        // often used DOM elements
         this.projectsContainer = document.getElementById("projects");
         this.addProjectBtn = document.getElementById("addProjectBtn");
         this.cancelAddingProjectBtn = document.querySelector('.cancel-btn');
@@ -27,149 +27,79 @@ class DOMS {
     }
 
     static bindEventListeners() {
-        // Event listeners
-        // Hamburger menu on mobile
         this.menuToggle.addEventListener('click', () => {
             this.menuContainer.classList.toggle('active');
             this.container.classList.toggle('menu-active');
         });
-        // Cancel button on add project
-        this.cancelAddingProjectBtn.addEventListener('click', () => this.hideNewProjectPopup());
-        this.addProjectBtn.addEventListener("click", () => this.showNewProjectPopup());
+        this.cancelAddingProjectBtn.addEventListener('click', () => UI.hideNewProjectPopup());
+        this.addProjectBtn.addEventListener("click", () => UI.showNewProjectPopup());
         this.newProjectForm.addEventListener('submit', (event) => this.handleNewProjectFormSubmission(event));
     }
 
     static handleNewProjectFormSubmission(event) {
         event.preventDefault();
-        // Get title of the newly added project and make an object -> add to existing projects
+        // Get the title value from the FORMS responsible for creating projects
         const projectTitle = this.newProjectForm.querySelector('#projectTitle').value;
+        // Make new project object
         const newProject = new Project(projectTitle);
         projectManager.addProject(newProject);
-        console.log('Creating new project with title:', projectTitle, "projectId: " + newProject.getId()); // DEBUG
+        // DEBUG
+        console.log('Creating new project with title:', projectTitle, "projectId: " + newProject.getId());
 
-        // Hide adding new projects and refresh projects DOM
-        this.hideNewProjectPopup();
-        this.displayAllProjectsDOMS();
+        // After adding new project hide the UI and refresh all projects
+        UI.hideNewProjectPopup();
+        UI.displayAllProjectsDOMS();
     }
 
     static handleNewTaskFormSubmission(event) {
         event.preventDefault();
-        // Gather inputs from the form
+    
+        // Get FORM values of creating tasks
         const title = document.getElementById('taskTitle').value;
         const description = document.getElementById('taskDescription').value;
         const dueDate = document.getElementById('taskDueDate').value;
         const priority = document.getElementById('taskPriority').value;
-        
-        // Assume you have a way to add tasks to the current project
+        // Create new task object
         const newTask = new Task(title, description, dueDate, priority);
-        // Add to current project or task manager
-        console.log('Task added:', newTask);
     
-        // Clear form and hide popup
+        // Get currently selected button and see if its a project
+        const currentlySelectedBtn = document.querySelector("[data-selected='true']");
+        const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
+        console.log('Task created:', newTask);
+    
+        projectManager.getAllProjects().forEach((project) => {
+            if (project.getId() == currentProjectId) {
+                project.addTask(newTask);
+                console.log(newTask);
+                console.log(project.getAmountOfTasks());
+            }
+        });
+    
         this.newTaskForm.reset();
-        this.hideNewTaskPopup();
+        UI.hideNewTaskPopup();
     }
+    
 
     static selectButton(newlySelectedButton) {
-        // Logic handling currently pressed button and assigning the selected data attribute
+        this.currentlySelectedDataId = newlySelectedButton.getAttribute("data-id");
+        // Fetch current button with the data selected
         let currentSelectedBtn = document.querySelector("[data-selected='true']");
         if (currentSelectedBtn) {
+            // Remove the selected and apply it instead on newly pressed button
             currentSelectedBtn.removeAttribute("data-selected");
-            newlySelectedButton.setAttribute("data-selected", "true");
+        }
+        newlySelectedButton.setAttribute("data-selected", "true");
 
-            // Upon the event of a button selection we want to display all its tasks -> create DOMS for tasks -> Display
-            const projectId = parseInt(newlySelectedButton.getAttribute("data-id")); // This id we want to find within our ArrayList of Projects
-            const specificProject = projectManager.getAllProjects().find((project) => project.getId() == projectId);
+        // Now match the selected buttons ID, check if basically its a project -> display the appropriate tasks.
+        const projectId = parseInt(newlySelectedButton.getAttribute("data-id"));
+        const specificProject = projectManager.getAllProjects().find((project) => project.getId() == projectId);
 
-            if(![1, 2, 3, 4].includes(projectId)) {
-                this.displayCurrentSelectedProjectContent(specificProject);
-            }
-            else {
-                Errors.emptyArray();
-            }
+        if (![1, 2, 3, 4].includes(projectId)) {
+            UI.displayCurrentSelectedProjectContent(specificProject);
+        } else {
+            Errors.emptyArray();
         }
     }
-
-    static createNewProjectDOM(project) {
-        const container = document.createElement("div");
-        container.classList.add("project");
-
-        const projectTitleBtn = document.createElement("button");
-        projectTitleBtn.setAttribute("data-id", project.getId());
-        projectTitleBtn.classList.add("buttonHover");
-        projectTitleBtn.textContent = project.getTitle();
-
-        const projectTaskCounter = document.createElement("span");
-        projectTaskCounter.classList.add("task-counter");
-        projectTaskCounter.textContent = project.getAmountOfTasks();
-
-        container.append(projectTitleBtn, projectTaskCounter);
-
-        return container;
-    }
-
-    static createNewTaskDOM(task) {
-        // Logic creating a task DOM from a task object
-    }
-
-    static addProjectDomToContainer(projectDOM) {
-        this.projectsContainer.appendChild(projectDOM);
-    }
-
-    static showNewProjectPopup() {
-        this.newProjectPopup.style.display = 'flex';
-    }
-
-    static hideNewProjectPopup() {
-        this.newProjectPopup.style.display = 'none';
-    }
-
-    static showNewTaskPopup() {
-        this.newTaskPopup.style.display = "flex";
-    }
-
-    static hideNewTaskPopup() {
-        this.newTaskPopup.style.display = "none";
-    }
-
-    static displayAllProjectsDOMS() {
-        this.projectsContainer.innerHTML = "";
-        projectManager.getAllProjects().forEach(project => {
-            this.addProjectDomToContainer(this.createNewProjectDOM(project));
-        });
-    }
-
-    static displayCurrentSelectedProjectContent(project) {
-        // clear insides of content
-        this.taskContentContainer.innerHTML = "";
-        console.log("Content container cleared");
-
-        if(project.getAmountOfTasks() > 0) {
-            // Fill contentContainer with newly selected button's content
-            project.getTasks().forEach((task) => {
-                // Create a task DOM (currently storing objects)
-                let newTaskDom = this.createNewTaskDOM(task);
-
-                console.log("Created new task DOM added to container");
-                // Add this new DOM element inside content
-                this.taskContentContainer.appendChild(newTaskDom);
-            });
-        }
-
-
-        // Append a button to add more tasks within the project
-
-        const addTaskBtn = document.createElement("button");
-        addTaskBtn.textContent = "+ New Task";
-        addTaskBtn.classList.add("add-new-task-btn");
-
-        addTaskBtn.addEventListener("click", () => {
-            DOMS.showNewTaskPopup();
-        });
-        
-        this.taskContentContainer.appendChild(addTaskBtn);
-    }
-
 }
 
 DOMS.init();

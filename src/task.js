@@ -17,6 +17,10 @@ class Task {
         this.title = newTitle;
     }
 
+    getTitle() {
+        return this.title;
+    }
+
     changeDescription(newDescription) {
         this.description = newDescription;
     }
@@ -41,7 +45,7 @@ class Task {
     }
 
     formattedDate() {
-        return format(this.dueDate, "yyyy-mm-dd");
+        return format(this.dueDate, 'MMMM d');
     }
 }
 
