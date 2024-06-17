@@ -29,6 +29,10 @@ class Project {
         return this.title;
     }
 
+    getTasks() {
+        return this.tasks;
+    }
+
 }
 
 export { Project };

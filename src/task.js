@@ -10,7 +10,7 @@ class Task {
         this.dueDate = parseISO(dueDate);
         this.priority = priority || "medium"; // default
         this.completed = false;
-        this.id = currentId++;
+        this.id = Task.currentId++;
     }
 
     changeTitle(newTitle) {
