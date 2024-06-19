@@ -3,7 +3,7 @@ import { Project } from './project';
 import { projectManager } from './projectManager';
 import { Task } from './task';
 import { Errors } from './errors';
-import {startOfToday, endOfToday, addDays, startOfMonth, endOfMonth, addMonths } from 'date-fns';
+import {startOfToday, endOfToday, addDays, addMonths } from 'date-fns';
 
 class DOMS {
     static init() {

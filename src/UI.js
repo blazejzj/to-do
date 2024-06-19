@@ -22,6 +22,7 @@ class UI {
     }
 
     static createNewTaskDOM(task) {
+
         const taskContainer = document.createElement("div");
         taskContainer.classList.add("task-container");
 
@@ -36,7 +37,22 @@ class UI {
         const taskTitle = document.createElement("h4");
         taskTitle.textContent = task.title;
 
-        taskContainerMain.append(checkBoxTaskCompleted, taskTitle);
+        const taskInProjectName = document.createElement("span");
+        taskInProjectName.classList.add("projectNameForTask");
+
+        // Find the appropriate project name based on where the task is located
+        projectManager.getAllProjects().forEach((project) => {
+            // Iterate through each projects tasks
+            project.getTasks().forEach((taskIteration) => {
+                if(taskIteration.getId() === task.getId()) {
+                    taskInProjectName.textContent = project.getTitle();
+                };
+                // No need for fallback -> Task always has a project
+            });            
+        });
+
+
+        taskContainerMain.append(checkBoxTaskCompleted, taskTitle, taskInProjectName);
         taskContainer.appendChild(taskContainerMain);
 
         const taskContainerSecond = document.createElement("div");
@@ -57,6 +73,7 @@ class UI {
         taskContainer.appendChild(taskContainerSecond);
 
         return taskContainer;
+        
     }
 
     static addProjectDomToContainer(projectDOM) {

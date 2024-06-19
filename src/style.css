@@ -4,9 +4,9 @@
 
 
 :root {
-    --main-bg-color: rgba(240, 229, 222, 0.95);
+    --main-bg-color: rgba(230, 227, 225, 0.95);
     --header-bg-color: #f1807e;
-    --menu-bg-color: #e4d5cd;
+    --menu-bg-color: #e2d7d2;
     --text-color: #141414;
     --border-detail-color: rgb(71, 47, 38);
     --task-counter-bg: var(--header-bg-color);
@@ -185,14 +185,49 @@ button {
 
 .task-container {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    background-color: rgb(224, 7, 7);
+    background-color: var(--menu-bg-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 100%;
+    border-left: 7px red solid;
 
     .task-container-main {
         display: flex;
         align-items: center;
-        margin: 1rem;
+        gap: 1rem;
+        text-align: center;
+        height: 100%;
+        
+        h4 {
+            font-family: var(--font-secondary);
+            font-size: 1rem;
+        }
+
+        #task-completed {
+            width: 15px;
+            height: 15px;            
+        }
+
+        .projectNameForTask {
+            opacity: 25%;
+            font-size: 0.8rem;
+        }
+    }
+
+    .task-container-second {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        height: 100%;
+        
+        span {
+            font-family: var(--font-secondary);
+        }
+
+        button {
+            margin: 0;
+        }
     }
 }
 
