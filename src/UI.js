@@ -1,11 +1,13 @@
 import { projectManager } from './projectManager';
 import { DOMS } from './dom';
 import { Task } from './task';
+import {startOfToday, endOfToday, addDays, addMonths } from 'date-fns';
 
 class UI {
     static createNewProjectDOM(project) {
         const container = document.createElement("div");
         container.classList.add("project");
+        container.setAttribute("project-id", project.getId());
 
         const projectTitleBtn = document.createElement("button");
         projectTitleBtn.setAttribute("data-id", project.getId());
@@ -108,7 +110,7 @@ class UI {
             const projectDOM = UI.createNewProjectDOM(project);
             if (project.getId() == DOMS.currentlySelectedDataId) {
                 projectDOM.querySelector('button').setAttribute("data-selected", "true");
-            }
+            }project
             UI.addProjectDomToContainer(projectDOM);
         });
     }
@@ -139,6 +141,78 @@ class UI {
             taskContentContainer.appendChild(taskDOM);
         });
     }
+
+    static updateTaskCounters() {
+
+        const allTasksView = document.getElementById("allTasksView");
+        const allTasksCounter = allTasksView.querySelector("span");
+
+        const todayTasksView = document.getElementById("todayTasksView");
+        const todayTasksCounter = todayTasksView.querySelector("span"); 
+
+        const weekTasksView = document.getElementById("weekTasksView");
+        const weekTasksCounter = weekTasksView.querySelector("span"); 
+
+        const monthTasksView = document.getElementById("monthTasksView");
+        const monthTasksCounter = monthTasksView.querySelector("span"); 
+
+        const projectsDOMS = document.querySelectorAll("[project-id]");
+
+        let allTasksCount = 0;
+        let todayTasksCount = 0;
+        let weekTasksCount = 0;
+        let monthTasksCount = 0;
+
+        const today = startOfToday();
+        const endOfNext7Days = addDays(today, 7); 
+        const endOfNextMonth = addMonths(today, 1);
+
+        // Iterate through each project DOM
+        projectsDOMS.forEach(projectDOM => {
+            const projectID = projectDOM.getAttribute("project-id");
+
+            // Find the corresponding projetc from the projectManager
+            const project = projectManager.getAllProjects().find(project => {
+                return project.getId().toString().trim() === projectID;
+            });
+
+
+            if (project) {
+                // Update project task coutner
+                const projectTaskCounter = projectDOM.querySelector("span");
+                projectTaskCounter.textContent = project.getAmountOfTasks();
+            }
+
+            // Get all tasks within a project
+            const tasks = project.getTasks();
+            tasks.forEach(task => {
+                allTasksCount++;
+                const taskDueDate = new Date(task.getDueDate());
+
+                // Assign appropriate values based on the due date
+                if(taskDueDate >= startOfToday() && taskDueDate <= endOfToday()) {
+                    todayTasksCount++;
+                    console.log("added today")
+                };
+
+                if(taskDueDate >= today && taskDueDate <= endOfNext7Days) {
+                    weekTasksCount++;
+                    console.log("added week")
+                };
+
+                if(taskDueDate >= today && taskDueDate <= endOfNextMonth) {
+                    monthTasksCount++;
+                    console.log("added month")
+                };
+            })
+        });
+
+        // Update the counters in the DOM
+        allTasksCounter.textContent = allTasksCount;
+        todayTasksCounter.textContent = todayTasksCount;
+        weekTasksCounter.textContent = weekTasksCount;
+        monthTasksCounter.textContent = monthTasksCount;
+    };
 }
 
 export { UI };

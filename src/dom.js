@@ -79,6 +79,11 @@ class DOMS {
                 project.addTask(newTask);
                 console.log(newTask);
                 console.log(project.getAmountOfTasks());
+                // Instantly display all tasks (update)
+                UI.displayCurrentSelectedProjectContent(project);
+                
+                // Upon adding tasks also update its counter
+                UI.updateTaskCounters();
             }
         });
     

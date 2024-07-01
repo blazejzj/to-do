@@ -39,6 +39,10 @@ class Task {
         }
     }
 
+    getDueDate() {
+        return this.dueDate;
+    }
+
     changePriority(newPriority) {
         // going to be controlled by buttons
         this.priority = newPriority
