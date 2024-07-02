@@ -188,7 +188,7 @@ button {
     justify-content: space-between;
     background-color: var(--menu-bg-color);
     border-radius: 10px;
-    padding: 1.5rem;
+    padding: 1rem;
     width: 100%;
     border-left: 7px red solid;
 
@@ -218,7 +218,7 @@ button {
     .task-container-second {
         display: flex;
         flex-direction: row;
-        gap: 1rem;
+        gap: 1.75rem;
         height: 100%;
         
         span {
@@ -227,13 +227,86 @@ button {
 
         button {
             margin: 0;
+            width: 25px;
+            height: 25px;
+
+            .taskButtonImages {
+                width: 100%;
+                height: 100%;
+            }
         }
     }
 }
 
+input[type="checkbox"] {
+    appearance: none;
+    background-color: #fff;
+    margin-top: 2.5px;
+    font: inherit;
+    width: 1.15em;
+    height: 1.15em;
+    border: 1px solid var(--header-bg-color);
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+    display: grid;
+    place-content: center;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: transform 120ms ease-in-out;
+    transform-origin: bottom left;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
 
 
-/* test */
+input[type="checkbox"]:checked::before {
+    transform: scale(1);
+    background-color: #fff;
+}
+
+input[type="checkbox"]:checked {
+    background-color: var(--header-bg-color);
+    transition: background-color 120ms ease-in-out;
+}
+
+
+.task-container.completed {
+    text-decoration: line-through;
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+    filter: grayscale(25%); /* Graying out the entire task */
+    opacity: 0.6; /* Slightly lowering opacity for a grayed-out effect */
+}
+
+.task-container.completed h4,
+.task-container.completed .projectNameForTask,
+.task-container.completed .dueTaskDate,
+.task-container.completed .editTaskBtn img {
+    color: rgb(0, 0, 0);
+    text-decoration: line-through;
+}
+
+.task-container.completed .taskButtonImages {
+    opacity: 50%;
+    position: relative;
+}
+
+.task-container.completed .taskButtonImages::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: black;
+    transform: translateY(-50%);
+}
+
+
+
 [data-selected="true"] {
     font-weight: bold;
     /* text-decoration: underline 1px var(--text-color);

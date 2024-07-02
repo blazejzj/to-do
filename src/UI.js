@@ -33,8 +33,16 @@ class UI {
 
         const checkBoxTaskCompleted = document.createElement("input");
         checkBoxTaskCompleted.setAttribute("type", "checkbox");
-        checkBoxTaskCompleted.setAttribute("id", `task-completed-${task.getId()}`);
+        checkBoxTaskCompleted.setAttribute("class", `task-completed-${task.getId()}`);
         checkBoxTaskCompleted.setAttribute("name", `task-completed-${task.getId()}`);
+        checkBoxTaskCompleted.addEventListener("change", () => {
+            const taskContainer = checkBoxTaskCompleted.closest('.task-container');
+            if (checkBoxTaskCompleted.checked) {
+                taskContainer.classList.add('completed');
+            } else {
+                taskContainer.classList.remove('completed');
+            }
+        });
 
         const taskTitle = document.createElement("h4");
         taskTitle.textContent = task.title;
@@ -64,13 +72,18 @@ class UI {
         displayDueDate.textContent = task.formattedDate();
 
         const editTaskBtn = document.createElement("button");
-        editTaskBtn.textContent = "EDIT";
-        editTaskBtn.classList.add("editTaskBtn");
-
+        const editTaskImg = document.createElement("img");
+        editTaskImg.src = "/asset/edit2.svg";
+        editTaskImg.alt = "Edit button";
+        editTaskImg.classList.add("taskButtonImages");
+        editTaskBtn.appendChild(editTaskImg);
+        
         const deleteTaskBtn = document.createElement("button");
-        deleteTaskBtn.textContent = "DELETE";
-        deleteTaskBtn.classList.add("deleteTaskBtn");
-
+        const deleteTaskImg = document.createElement("img");
+        deleteTaskImg.src = "/asset/delete.svg";
+        deleteTaskImg.alt = "Delete Button";
+        deleteTaskImg.classList.add("taskButtonImages");
+        deleteTaskBtn.appendChild(deleteTaskImg);
         taskContainerSecond.append(displayDueDate, editTaskBtn, deleteTaskBtn);
         taskContainer.appendChild(taskContainerSecond);
 
@@ -213,6 +226,10 @@ class UI {
         weekTasksCounter.textContent = weekTasksCount;
         monthTasksCounter.textContent = monthTasksCount;
     };
+
+    static handleCheckBoxChange(checkbox) {
+
+    }
 }
 
 export { UI };
