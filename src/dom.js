@@ -41,6 +41,7 @@ class DOMS {
         document.getElementById('showDueTodayTasks').addEventListener('click', () => this.filterTasks('today'));
         document.getElementById('showDueWeekTasks').addEventListener('click', () => this.filterTasks('week'));
         document.getElementById('showDueMonthTasks').addEventListener('click', () => this.filterTasks('month'));
+
     }
 
     static handleNewProjectFormSubmission(event) {
