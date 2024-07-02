@@ -25,6 +25,10 @@ class Task {
         return this.id;
     }
 
+    getPriority() {
+        return this.priority;
+    }
+
     changeDescription(newDescription) {
         this.description = newDescription;
     }

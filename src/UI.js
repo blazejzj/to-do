@@ -73,14 +73,14 @@ class UI {
 
         const editTaskBtn = document.createElement("button");
         const editTaskImg = document.createElement("img");
-        editTaskImg.src = "/asset/edit2.svg";
+        editTaskImg.src = "/asset/edit.png";
         editTaskImg.alt = "Edit button";
         editTaskImg.classList.add("taskButtonImages");
         editTaskBtn.appendChild(editTaskImg);
         
         const deleteTaskBtn = document.createElement("button");
         const deleteTaskImg = document.createElement("img");
-        deleteTaskImg.src = "/asset/delete.svg";
+        deleteTaskImg.src = "/asset/trash.png";
         deleteTaskImg.alt = "Delete Button";
         deleteTaskImg.classList.add("taskButtonImages");
         deleteTaskBtn.appendChild(deleteTaskImg);
@@ -135,6 +135,21 @@ class UI {
         if (project.getAmountOfTasks() > 0) {
             project.getTasks().forEach(task => {
                 let newTaskDom = UI.createNewTaskDOM(task);
+                // Give appropriate border to the task based on its priority
+                switch (task.getPriority()) {
+                    case "high":
+                        newTaskDom.classList.add("task-priority-high");
+                        break;
+                    case "medium":
+                        newTaskDom.classList.add("task-priority-medium");
+                        break;
+                    case "low":
+                        newTaskDom.classList.add("task-priority-low");
+                        break;
+                    default:
+                        newTaskDom.classList.add("task-priority-medium");
+                };
+
                 taskContentContainer.appendChild(newTaskDom);
             });
         }
@@ -226,10 +241,6 @@ class UI {
         weekTasksCounter.textContent = weekTasksCount;
         monthTasksCounter.textContent = monthTasksCount;
     };
-
-    static handleCheckBoxChange(checkbox) {
-
-    }
 }
 
 export { UI };
