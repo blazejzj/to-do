@@ -476,6 +476,21 @@ input[type="checkbox"]:checked {
     .cancel-btn:hover, .submit-btn:hover {
         background-color: #666;
     }
+
+    .submit-btn {
+        background-color: #4CAF50;
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    }
+    
+    .cancel-btn {
+        background-color: #f44336;
+        .cancel-btn:hover {
+            background-color: #d32f2f;
+        }
+    }
 }
 
 

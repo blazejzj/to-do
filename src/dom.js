@@ -3,7 +3,7 @@ import { Project } from './project';
 import { projectManager } from './projectManager';
 import { Task } from './task';
 import { Errors } from './errors';
-import {startOfToday, endOfToday, addDays, addMonths } from 'date-fns';
+import {startOfToday, endOfToday, addDays, addMonths, parseISO, isBefore } from 'date-fns';
 
 class DOMS {
     static init() {
@@ -65,11 +65,23 @@ class DOMS {
         // Get FORM values of creating tasks
         const title = document.getElementById('taskTitle').value;
         const description = document.getElementById('taskDescription').value;
-        const dueDate = document.getElementById('taskDueDate').value;
         const priority = document.getElementById('taskPriority').value;
+        
+        // Validate task due date before creating a task
+        const dueDate = document.getElementById('taskDueDate').value;
+        const todayDate = startOfToday();
+        const selectedDate = parseISO(dueDate);
+        const incorrectDateMsg = document.getElementById("incorrectDateMsg");
+
+        if(isBefore(selectedDate, todayDate)) {
+            incorrectDateMsg.style.display = "initial";
+            return;
+        };
+        
         // Create new task object
         const newTask = new Task(title, description, dueDate, priority);
-    
+        incorrectDateMsg.style.display = "none";
+
         // Get currently selected button and see if its a project
         const currentlySelectedBtn = document.querySelector("[data-selected='true']");
         const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
