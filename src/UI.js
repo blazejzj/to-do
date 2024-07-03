@@ -72,6 +72,12 @@ class UI {
         displayDueDate.textContent = task.formattedDate();
 
         const editTaskBtn = document.createElement("button");
+        // Allow editing a task (pop up)
+        editTaskBtn.addEventListener("click", function() {
+            // Create popup, allow changing task values
+        });
+
+        // Give edit button an icon
         const editTaskImg = document.createElement("img");
         editTaskImg.src = "/asset/edit.png";
         editTaskImg.alt = "Edit button";
@@ -79,6 +85,22 @@ class UI {
         editTaskBtn.appendChild(editTaskImg);
         
         const deleteTaskBtn = document.createElement("button");
+        // Delete that particular task upon clicking the button
+        deleteTaskBtn.addEventListener("click", function() {
+            console.log("Pressed delete button")
+            // Find the currently pressed project and its id (Thats where the task would be)
+            const currentlySelectedBtn = document.querySelector("[data-selected='true']");
+            const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
+
+            // Find the project in projectmanager by matching the IDs
+            const project = projectManager.getAllProjects().find((project) => project.getId() === currentProjectId); 
+
+            // Remove task & refresh
+            project.removeTask(task.getId());
+            UI.displayCurrentSelectedProjectContent(project);
+        });
+
+        // Give delete button an icon
         const deleteTaskImg = document.createElement("img");
         deleteTaskImg.src = "/asset/trash.png";
         deleteTaskImg.alt = "Delete Button";
