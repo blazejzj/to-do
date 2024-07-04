@@ -1,7 +1,7 @@
 
 class Project {
 
-    static projectId = 0 + 5; // starting at five because of static buttons in index page
+    static projectId = 5; // Starting at 5 because we have some static ids that show tasks based on due date
 
     constructor(title) {
         this.title = title;
@@ -9,20 +9,8 @@ class Project {
         this.tasks = [];
     }
 
-    removeTask(taskId) {
-        this.tasks = this.tasks.filter(task => task.getId() != taskId);
-    }
-
-    addTask(newTask) {
-        this.tasks.push(newTask);
-    }
-
     getAmountOfTasks() {
         return this.tasks.length;
-    }
-
-    setAmountOfTasks(amount) {
-        this.tasks.length = amount;
     }
 
     getId() {
@@ -35,6 +23,18 @@ class Project {
 
     getTasks() {
         return this.tasks;
+    }
+
+    setAmountOfTasks(amount) {
+        this.tasks.length = amount;
+    }
+
+    removeTask(taskId) {
+        this.tasks = this.tasks.filter(task => task.getId() != taskId);
+    }
+
+    addTask(newTask) {
+        this.tasks.push(newTask);
     }
 
 }

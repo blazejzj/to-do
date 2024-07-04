@@ -2,6 +2,8 @@ import { format, parseISO, isFuture } from 'date-fns';
 import { Errors } from './errors';
 
 class Task {
+
+    // static property to keep track of the current id of each task
     static currentId = 0;
 
     constructor(title, description, dueDate, priority) {
@@ -13,7 +15,7 @@ class Task {
         this.id = Task.currentId++;
     }
 
-    changeTitle(newTitle) {
+    setTitle(newTitle) {
         this.title = newTitle;
     }
 
@@ -36,13 +38,20 @@ class Task {
     getDueDate() {
         return this.dueDate;
     }
+    
+    getFormattedDate() {
+        return format(this.dueDate, 'MMMM d');
+    }
 
+    setPriority(newPriority) {
+        this.priority = newPriority
+    }
 
-    changeDescription(newDescription) {
+    setDescription(newDescription) {
         this.description = newDescription;
     }
 
-    changeDuedate(newDueDate) {
+    setDueDate(newDueDate) {
         let newDate = parseISO(newDueDate);
         if(isFuture(newDate)) {
             this.dueDate = newDueDate
@@ -51,19 +60,11 @@ class Task {
             Errors.wrongNewDate();
         }
     }
-
-    changePriority(newPriority) {
-        // going to be controlled by buttons
-        this.priority = newPriority
-    }
-
-    toggleCompletd() {
+    
+    toggleCompleted() {
         this.completed = !this.completed;
     }
 
-    formattedDate() {
-        return format(this.dueDate, 'MMMM d');
-    }
 
 
 }

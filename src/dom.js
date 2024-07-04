@@ -20,7 +20,7 @@ class DOMS {
         this.newProjectPopup = document.getElementById('newProjectPopup');
         this.menuToggle = document.querySelector('.hamburger-menu-container img');
         this.menuContainer = document.querySelector('.menu-container');
-        this.container = document.querySelector('.container');
+        this.mainContainer = document.querySelector('.container');
         this.taskContentContainer = document.getElementById("content");
         this.newTaskPopup = document.getElementById('newTaskPopup');
         this.newTaskForm = document.getElementById('newTaskForm');
@@ -30,17 +30,17 @@ class DOMS {
     static bindEventListeners() {
         this.menuToggle.addEventListener('click', () => {
             this.menuContainer.classList.toggle('active');
-            this.container.classList.toggle('menu-active');
+            this.mainContainer.classList.toggle('menu-active');
         });
         this.cancelAddingProjectBtn.addEventListener('click', () => UI.hideNewProjectPopup());
         this.addProjectBtn.addEventListener("click", () => UI.showNewProjectPopup());
         this.newProjectForm.addEventListener('submit', (event) => this.handleNewProjectFormSubmission(event));
 
         // Show tasks category by date buttons
-        document.getElementById("showAllTasks").addEventListener("click", () => this.filterTasks("all"));
-        document.getElementById('showDueTodayTasks').addEventListener('click', () => this.filterTasks('today'));
-        document.getElementById('showDueWeekTasks').addEventListener('click', () => this.filterTasks('week'));
-        document.getElementById('showDueMonthTasks').addEventListener('click', () => this.filterTasks('month'));
+        document.getElementById("showAllTasks").addEventListener("click", () => this.showFilteredTaskBasedOnTime("all"));
+        document.getElementById('showDueTodayTasks').addEventListener('click', () => this.showFilteredTaskBasedOnTime('today'));
+        document.getElementById('showDueWeekTasks').addEventListener('click', () => this.showFilteredTaskBasedOnTime('week'));
+        document.getElementById('showDueMonthTasks').addEventListener('click', () => this.showFilteredTaskBasedOnTime('month'));
 
     }
 
@@ -48,11 +48,11 @@ class DOMS {
         event.preventDefault();
         // Get the title value from the FORMS responsible for creating projects
         const projectTitle = this.newProjectForm.querySelector('#projectTitle').value;
-        // Make new project object
+        // Make new project object add it to the list of all projects
         const newProject = new Project(projectTitle);
         projectManager.addProject(newProject);
         
-        // After adding new project hide the UI and refresh all projects
+        // After adding new project hide the UI and refresh all projects (show)
         UI.hideNewProjectPopup();
         UI.displayAllProjectsDOMS();
     }
@@ -60,7 +60,7 @@ class DOMS {
     static handleNewTaskFormSubmission(event) {
         event.preventDefault();
     
-        // Get FORM values of creating tasks
+        // Forms values from submitting a new task
         const title = document.getElementById('taskTitle').value;
         const description = document.getElementById('taskDescription').value;
         const priority = document.getElementById('taskPriority').value;
@@ -71,20 +71,26 @@ class DOMS {
         const selectedDate = parseISO(dueDate);
         const incorrectDateMsg = document.getElementById("incorrectDateMsg");
 
+        // Disallow user to set a due date before today
         if(isBefore(selectedDate, todayDate)) {
             incorrectDateMsg.style.display = "initial";
             return;
         };
         
-        // Create new task object
+        // If validated create new task object
         const newTask = new Task(title, description, dueDate, priority);
         incorrectDateMsg.style.display = "none";
 
-        // Get currently selected button and see if its a project
+        /*
+        Find currently selected project (its id)
+        Match the id with the project in the list of all projects
+        Display all tasks from the selected project
+        */ 
         const currentlySelectedBtn = document.querySelector("[data-selected='true']");
         const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
     
-        projectManager.getAllProjects().forEach((project) => {
+
+        projectManager.getProjects().forEach((project) => {
             if (project.getId() == currentProjectId) {
                 project.addTask(newTask);
                 // Instantly display all tasks (update)
@@ -95,25 +101,25 @@ class DOMS {
             }
         });
     
+        // Reset everything -> Hide the popup and reset forms
         this.newTaskForm.reset();
         UI.hideNewTaskPopup();
     }
     
 
     static selectButton(newlySelectedButton) {
-        this.currentlySelectedDataId = newlySelectedButton.getAttribute("data-id");
-        // Fetch current button with the data selected
+        // Fetch currently selected button
         let currentSelectedBtn = document.querySelector("[data-selected='true']");
-        if (currentSelectedBtn) {
-            // Remove the selected and apply it instead on newly pressed button
-            currentSelectedBtn.removeAttribute("data-selected");
-        }
+
+        // Remove the data-selected attribute from the currently selected button and reassign it to the newly selected button
+        currentSelectedBtn.removeAttribute("data-selected");
         newlySelectedButton.setAttribute("data-selected", "true");
 
-        // Now match the selected buttons ID, check if basically its a project -> display the appropriate tasks.
+        // Fetch the project id from the newly selected button and display its content
         const projectId = parseInt(newlySelectedButton.getAttribute("data-id"));
-        const specificProject = projectManager.getAllProjects().find((project) => project.getId() == projectId);
+        const specificProject = projectManager.getProjects().find((project) => project.getId() == projectId);
 
+        // First 4 are default "buttons" displaying tasks by different criterias (all, today, week, month)
         if (![1, 2, 3, 4].includes(projectId)) {
             UI.displayCurrentSelectedProjectContent(specificProject);
         } else {
@@ -121,10 +127,10 @@ class DOMS {
         }
     }
 
-    static filterTasks(dueType) {
+    static showFilteredTaskBasedOnTime(dueType) {
         // Fetch all tasks from all projects
         const allAvailableTasks = [];
-        projectManager.getAllProjects().forEach((project) => {
+        projectManager.getProjects().forEach((project) => {
             project.getTasks().forEach((task) => {
                 allAvailableTasks.push(task);
             });

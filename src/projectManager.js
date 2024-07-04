@@ -13,7 +13,7 @@ class ProjectManager {
        this.projects = this.projects.filter(project => project.getId() !== projectId);
     }
 
-    getAllProjects() {
+    getProjects() {
         return this.projects;
     }
 }
