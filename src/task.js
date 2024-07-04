@@ -29,6 +29,15 @@ class Task {
         return this.priority;
     }
 
+    getCompleted() {
+        return this.completed;
+    }
+
+    getDueDate() {
+        return this.dueDate;
+    }
+
+
     changeDescription(newDescription) {
         this.description = newDescription;
     }
@@ -41,10 +50,6 @@ class Task {
         else {
             Errors.wrongNewDate();
         }
-    }
-
-    getDueDate() {
-        return this.dueDate;
     }
 
     changePriority(newPriority) {

@@ -51,9 +51,7 @@ class DOMS {
         // Make new project object
         const newProject = new Project(projectTitle);
         projectManager.addProject(newProject);
-        // DEBUG
-        console.log('Creating new project with title:', projectTitle, "projectId: " + newProject.getId());
-
+        
         // After adding new project hide the UI and refresh all projects
         UI.hideNewProjectPopup();
         UI.displayAllProjectsDOMS();
@@ -85,13 +83,10 @@ class DOMS {
         // Get currently selected button and see if its a project
         const currentlySelectedBtn = document.querySelector("[data-selected='true']");
         const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
-        console.log('Task created:', newTask);
     
         projectManager.getAllProjects().forEach((project) => {
             if (project.getId() == currentProjectId) {
                 project.addTask(newTask);
-                console.log(newTask);
-                console.log(project.getAmountOfTasks());
                 // Instantly display all tasks (update)
                 UI.displayCurrentSelectedProjectContent(project);
                 

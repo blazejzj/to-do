@@ -21,6 +21,10 @@ class Project {
         return this.tasks.length;
     }
 
+    setAmountOfTasks(amount) {
+        this.tasks.length = amount;
+    }
+
     getId() {
         return this.projectId;
     }

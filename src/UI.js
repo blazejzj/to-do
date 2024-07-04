@@ -16,7 +16,7 @@ class UI {
 
         const projectTaskCounter = document.createElement("span");
         projectTaskCounter.classList.add("task-counter");
-        projectTaskCounter.textContent = project.getAmountOfTasks();
+        projectTaskCounter.textContent = 0;
 
         container.append(projectTitleBtn, projectTaskCounter);
 
@@ -27,7 +27,7 @@ class UI {
 
         const taskContainer = document.createElement("div");
         taskContainer.classList.add("task-container");
-
+        
         const taskContainerMain = document.createElement("div");
         taskContainerMain.classList.add("task-container-main");
 
@@ -39,8 +39,12 @@ class UI {
             const taskContainer = checkBoxTaskCompleted.closest('.task-container');
             if (checkBoxTaskCompleted.checked) {
                 taskContainer.classList.add('completed');
+                task.toggleCompletd();
+                UI.updateTaskCounters();
             } else {
                 taskContainer.classList.remove('completed');
+                task.toggleCompletd();
+                UI.updateTaskCounters();
             }
         });
 
@@ -87,7 +91,6 @@ class UI {
         const deleteTaskBtn = document.createElement("button");
         // Delete that particular task upon clicking the button
         deleteTaskBtn.addEventListener("click", function() {
-            console.log("Pressed delete button")
             // Find the currently pressed project and its id (Thats where the task would be)
             const currentlySelectedBtn = document.querySelector("[data-selected='true']");
             const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
@@ -98,6 +101,7 @@ class UI {
             // Remove task & refresh
             project.removeTask(task.getId());
             UI.displayCurrentSelectedProjectContent(project);
+            UI.updateTaskCounters();
         });
 
         // Give delete button an icon
@@ -108,6 +112,17 @@ class UI {
         deleteTaskBtn.appendChild(deleteTaskImg);
         taskContainerSecond.append(displayDueDate, editTaskBtn, deleteTaskBtn);
         taskContainer.appendChild(taskContainerSecond);
+
+
+        // before returning the task container, check if the task is completed
+        // if completed, add (completed style & checked checkbox)
+        if (task.getCompleted()) {
+            UI.addTaskCompletedStyle(taskContainer);
+            checkBoxTaskCompleted.checked = true;
+        }
+        else {
+            UI.removeTaskCompletedStyle(taskContainer);
+        }
 
         return taskContainer;
         
@@ -136,6 +151,14 @@ class UI {
     static hideNewTaskPopup() {
         const newTaskPopup = document.getElementById('newTaskPopup');
         newTaskPopup.style.display = "none";
+    }
+
+    static addTaskCompletedStyle(taskContainer) {
+        taskContainer.classList.add("completed");
+    }
+
+    static removeTaskCompletedStyle(taskContainer) {
+        taskContainer.classList.remove("completed");
     }
 
     static displayAllProjectsDOMS() {
@@ -226,38 +249,43 @@ class UI {
                 return project.getId().toString().trim() === projectID;
             });
 
+            // Update project task coutner
+            const projectTaskCounter = projectDOM.querySelector("span");
+            let projectTaskAmount = 0;
 
-            if (project) {
-                // Update project task coutner
-                const projectTaskCounter = projectDOM.querySelector("span");
-                projectTaskCounter.textContent = project.getAmountOfTasks();
-            }
-
+            
             // Get all tasks within a project
             const tasks = project.getTasks();
             tasks.forEach(task => {
-                allTasksCount++;
                 const taskDueDate = new Date(task.getDueDate());
+                const taskCompleted = task.getCompleted();
 
+                if(taskCompleted) {
+                    return;
+                }
+
+                allTasksCount++;
+                projectTaskAmount++;
+                
                 // Assign appropriate values based on the due date
                 if(taskDueDate >= startOfToday() && taskDueDate <= endOfToday()) {
                     todayTasksCount++;
-                    console.log("added today")
                 };
 
                 if(taskDueDate >= today && taskDueDate <= endOfNext7Days) {
                     weekTasksCount++;
-                    console.log("added week")
                 };
 
                 if(taskDueDate >= today && taskDueDate <= endOfNextMonth) {
                     monthTasksCount++;
-                    console.log("added month")
                 };
             })
+            // Update the project task counter
+            projectTaskCounter.textContent = projectTaskAmount;
         });
 
         // Update the counters in the DOM
+
         allTasksCounter.textContent = allTasksCount;
         todayTasksCounter.textContent = todayTasksCount;
         weekTasksCounter.textContent = weekTasksCount;
