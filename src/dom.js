@@ -104,15 +104,22 @@ class DOMS {
         // Reset everything -> Hide the popup and reset forms
         this.newTaskForm.reset();
         UI.hideNewTaskPopup();
-    }
+    };
     
 
     static selectButton(newlySelectedButton) {
+
+        // Set the currently selected project id
+        this.currentlySelectedDataId = newlySelectedButton.getAttribute("data-id");
+
         // Fetch currently selected button
         let currentSelectedBtn = document.querySelector("[data-selected='true']");
 
-        // Remove the data-selected attribute from the currently selected button and reassign it to the newly selected button
-        currentSelectedBtn.removeAttribute("data-selected");
+        // Check if a currently selected button exists before trying to remove the attribute
+        if (currentSelectedBtn) {
+            currentSelectedBtn.removeAttribute("data-selected");
+        }   
+
         newlySelectedButton.setAttribute("data-selected", "true");
 
         // Fetch the project id from the newly selected button and display its content
@@ -125,7 +132,7 @@ class DOMS {
         } else {
             Errors.emptyArray();
         }
-    }
+    };
 
     static showFilteredTaskBasedOnTime(dueType) {
         // Fetch all tasks from all projects
