@@ -15,7 +15,7 @@ class DOMS {
         // often used DOM elements
         this.projectsContainer = document.getElementById("projects");
         this.addProjectBtn = document.getElementById("addProjectBtn");
-        this.cancelAddingProjectBtn = document.querySelector('.cancel-btn');
+        this.cancelAddingProjectBtn = document.querySelector('.projectCancelBtn');
         this.newProjectForm = document.getElementById('newProjectForm');
         this.newProjectPopup = document.getElementById('newProjectPopup');
         this.menuToggle = document.querySelector('.hamburger-menu-container img');
@@ -25,6 +25,8 @@ class DOMS {
         this.newTaskPopup = document.getElementById('newTaskPopup');
         this.newTaskForm = document.getElementById('newTaskForm');
         this.newTaskForm.addEventListener('submit', (event) => this.handleNewTaskFormSubmission(event));
+        this.priorityButtons = document.querySelectorAll('.priority-btn');
+        this.taskPriorityInput = document.getElementById('taskPriority');
     }
 
     static bindEventListeners() {
@@ -35,6 +37,21 @@ class DOMS {
         this.cancelAddingProjectBtn.addEventListener('click', () => UI.hideNewProjectPopup());
         this.addProjectBtn.addEventListener("click", () => UI.showNewProjectPopup());
         this.newProjectForm.addEventListener('submit', (event) => this.handleNewProjectFormSubmission(event));
+        this.priorityButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                this.priorityButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to the clicked button
+                button.classList.add('active');
+    
+                // Update the hidden input value
+                this.taskPriorityInput.value = button.getAttribute('data-priority');
+            });
+        });
+
+        // Default selected priority
+        document.querySelector(`.priority-btn[data-priority="${this.taskPriorityInput.value}"]`).classList.add('active');
 
         // Show tasks category by date buttons
         document.getElementById("showAllTasks").addEventListener("click", () => this.showFilteredTaskBasedOnTime("all"));
@@ -60,27 +77,27 @@ class DOMS {
     static handleNewTaskFormSubmission(event) {
         event.preventDefault();
     
-        // Forms values from submitting a new task
+        // Form values from submitting a new task
         const title = document.getElementById('taskTitle').value;
         const description = document.getElementById('taskDescription').value;
         const priority = document.getElementById('taskPriority').value;
-        
+    
         // Validate task due date before creating a task
         const dueDate = document.getElementById('taskDueDate').value;
         const todayDate = startOfToday();
         const selectedDate = parseISO(dueDate);
         const incorrectDateMsg = document.getElementById("incorrectDateMsg");
-
+    
         // Disallow user to set a due date before today
-        if(isBefore(selectedDate, todayDate)) {
+        if (isBefore(selectedDate, todayDate)) {
             incorrectDateMsg.style.display = "initial";
             return;
-        };
-        
+        }
+    
         // If validated create new task object
         const newTask = new Task(title, description, dueDate, priority);
         incorrectDateMsg.style.display = "none";
-
+    
         /*
         Find currently selected project (its id)
         Match the id with the project in the list of all projects
@@ -89,7 +106,6 @@ class DOMS {
         const currentlySelectedBtn = document.querySelector("[data-selected='true']");
         const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
     
-
         projectManager.getProjects().forEach((project) => {
             if (project.getId() == currentProjectId) {
                 project.addTask(newTask);
@@ -102,9 +118,11 @@ class DOMS {
         });
     
         // Reset everything -> Hide the popup and reset forms
-        this.newTaskForm.reset();
+        document.getElementById('newTaskForm').reset();
+        document.querySelector('.priority-btn.active').classList.remove('active');
+        document.querySelector(`.priority-btn[data-priority="medium"]`).classList.add('active');
         UI.hideNewTaskPopup();
-    };
+    }
     
 
     static selectButton(newlySelectedButton) {

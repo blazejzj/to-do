@@ -76,10 +76,15 @@ class UI {
         const taskContainerSecond = document.createElement("div");
         taskContainerSecond.classList.add("task-container-second");
 
+        const showDetailsBtn = document.createElement("button");
+        showDetailsBtn.classList.add("taskShowDetailsBtn");
+        showDetailsBtn.textContent = "Details";
+
         const displayDueDate = document.createElement("span");
         displayDueDate.textContent = task.getFormattedDate();
 
         const editTaskBtn = document.createElement("button");
+        editTaskBtn.classList.add("editTaskBtn");
         // Allow editing a task (pop up)
         editTaskBtn.addEventListener("click", function() {
             // Create popup, allow changing task values
@@ -87,12 +92,13 @@ class UI {
 
         // Give edit button an icon
         const editTaskImg = document.createElement("img");
-        editTaskImg.src = "/asset/edit.png";
+        editTaskImg.src = "/asset/editBtn.svg";
         editTaskImg.alt = "Edit button";
         editTaskImg.classList.add("taskButtonImages");
         editTaskBtn.appendChild(editTaskImg);
         
         const deleteTaskBtn = document.createElement("button");
+        deleteTaskBtn.classList.add("deleteTaskBtn");
         // Delete that particular task upon clicking the button
         deleteTaskBtn.addEventListener("click", function() {
             // Find the currently pressed project and its id (Thats where the task would be)
@@ -110,11 +116,11 @@ class UI {
 
         // Give delete button an icon
         const deleteTaskImg = document.createElement("img");
-        deleteTaskImg.src = "/asset/trash.png";
+        deleteTaskImg.src = "/asset/deleteBtn.svg";
         deleteTaskImg.alt = "Delete Button";
         deleteTaskImg.classList.add("taskButtonImages");
         deleteTaskBtn.appendChild(deleteTaskImg);
-        taskContainerSecond.append(displayDueDate, editTaskBtn, deleteTaskBtn);
+        taskContainerSecond.append(showDetailsBtn, displayDueDate, editTaskBtn, deleteTaskBtn);
         taskContainer.appendChild(taskContainerSecond);
 
 

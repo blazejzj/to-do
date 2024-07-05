@@ -66,12 +66,11 @@
                 <h2>Add New Project</h2>
                 <form id="newProjectForm">
                     <div class="projectPopupInputContainer">
-                        <label for="projectTitle">Project Title:</label>
-                        <input type="text" id="projectTitle" name="projectTitle" required>
+                        <input type="text" id="projectTitle" name="projectTitle" required maxlength="25" placeholder="Project title: Work...">
                     </div>
                     <div class="projectPopupButtonsContainer">
-                        <button type="submit" class="submit-btn">Add Project</button>
-                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="projectSubmitBtn">Add Project</button>
+                        <button type="button" class="projectCancelBtn">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -83,26 +82,36 @@
                 <h2>Add New Task</h2>
                 <form id="newTaskForm">
                     <div class="taskPopupInputContainer">
-                        <label for="taskTitle">Task Title:</label>
-                        <input type="text" id="taskTitle" name="taskTitle" required>
-                        
-                        <label for="taskDescription">Description:</label>
-                        <textarea id="taskDescription" name="taskDescription" style="resize: none;" required></textarea>
-                        
-                        <label for="taskDueDate">Due Date:</label>
-                        <input type="date" id="taskDueDate" name="taskDueDate" required>
-                        <span style="color: red; font-size: 0.8rem; display: none;" id="incorrectDateMsg">*Please use a valid due date</span>
-                        
-                        <label for="taskPriority">Priority:</label>
-                        <select id="taskPriority" name="taskPriority">
+                        <div>
+                            <input type="text" id="taskTitle" name="taskTitle" required maxlength="25" placeholder="Title: Meeting">
+                            <textarea id="taskDescription" name="taskDescription" style="resize: none;" required maxlength="500" placeholder="Details: Work, client, housekeeper"></textarea>
+                        </div>
+                        <div>
+                            <div id="dueDateContainer">
+                                <label for="taskDueDate">Due Date:</label>
+                                <input type="date" id="taskDueDate" name="taskDueDate" required>
+                                <span style="color: red; font-size: 0.8rem; display: none;" id="incorrectDateMsg">*Please use a valid due date</span>
+                            </div>
+                            <div id="taskButtonsContainer">
+                                <div id="buttonContainer">
+                                    <label for="taskPriority">Priority:</label>
+                                    <button type="button" class="priority-btn" data-priority="low">Low</button>
+                                    <button type="button" class="priority-btn" data-priority="medium">Medium</button>
+                                    <button type="button" class="priority-btn" data-priority="high">High</button>
+                                </div>
+                                <input type="hidden" id="taskPriority" name="taskPriority" value="medium">
+                                <div class="taskPopupButtonsContainer">
+                                    <button type="submit" class="taskSubmitBtn">Add Task</button>
+                                    <button type="button" class="taskCancelBtn" onclick="document.getElementById('newTaskPopup').style.display='none';">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <select id="taskPriority" name="taskPriority">
                             <option value="low">Low</option>
                             <option value="medium" selected>Medium</option>
                             <option value="high">High</option>
-                        </select>
-                    </div>
-                    <div class="taskPopupButtonsContainer">
-                        <button type="submit" class="submit-btn">Add Task</button>
-                        <button type="button" class="cancel-btn" onclick="document.getElementById('newTaskPopup').style.display='none';">Cancel</button>
+                        </select> -->
                     </div>
                 </form>
             </div>
@@ -117,9 +126,10 @@
                     <span class="projectNameForTask">PROJECTNAME</span>
                 </div>
                 <div class="task-container-second">
+                    <button class="taskShowDetailsBtn">Details</button>
                     <span class="dueTaskDate">June 23</span>
-                    <button class="editTaskBtn"><img src="/asset/edit.png" alt="Edit button" class="taskButtonImages"></button>
-                    <button class="deleteTaskBtn"><img src="/asset/trash.png" alt="Delete Button" class="taskButtonImages"></button>
+                    <button class="editTaskBtn"><img src="/asset/editBtn.svg" alt="Edit button" class="taskButtonImages"></button>
+                    <button class="deleteTaskBtn"><img src="/asset/deleteBtn.svg" alt="Delete Button" class="taskButtonImages"></button>
                 </div>
             </div>
         </div>
