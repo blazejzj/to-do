@@ -19,6 +19,17 @@
     --font-secondary: "Poppins", sans sarif;
 }
 
+@keyframes popupAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -362,13 +373,13 @@ input[type="checkbox"]:checked {
 }
 
 .popup-container {
+    animation: popupAppear 0.3s ease-in-out;
     position: fixed;
     display: none; 
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
     justify-content: center;
     align-items: center;
     z-index: 50; 
