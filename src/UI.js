@@ -92,7 +92,7 @@ class UI {
 
         // Give edit button an icon
         const editTaskImg = document.createElement("img");
-        editTaskImg.src = "/assets/editBtn.svg";
+        editTaskImg.src = "/asset/editBtn.svg";
         editTaskImg.alt = "Edit button";
         editTaskImg.classList.add("taskButtonImages");
         editTaskBtn.appendChild(editTaskImg);
@@ -116,7 +116,7 @@ class UI {
 
         // Give delete button an icon
         const deleteTaskImg = document.createElement("img");
-        deleteTaskImg.src = "/assets/deleteBtn.svg";
+        deleteTaskImg.src = "/asset/deleteBtn.svg";
         deleteTaskImg.alt = "Delete Button";
         deleteTaskImg.classList.add("taskButtonImages");
         deleteTaskBtn.appendChild(deleteTaskImg);
