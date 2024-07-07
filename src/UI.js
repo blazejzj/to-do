@@ -3,6 +3,11 @@ import { DOMS } from './dom';
 import { Task } from './task';
 import {startOfToday, endOfToday, addDays, addMonths } from 'date-fns';
 
+// Icon imports
+import editBtnIcon from "../asset/editBtn.svg";
+import deleteBtnIcon from '../asset/deleteBtn.svg';
+
+
 class UI {
 
     // Create a new project DOM
@@ -92,7 +97,7 @@ class UI {
 
         // Give edit button an icon
         const editTaskImg = document.createElement("img");
-        editTaskImg.src = "/asset/editBtn.svg";
+        editTaskImg.src = editBtnIcon;
         editTaskImg.alt = "Edit button";
         editTaskImg.classList.add("taskButtonImages");
         editTaskBtn.appendChild(editTaskImg);
@@ -116,7 +121,7 @@ class UI {
 
         // Give delete button an icon
         const deleteTaskImg = document.createElement("img");
-        deleteTaskImg.src = "/asset/deleteBtn.svg";
+        deleteTaskImg.src = deleteBtnIcon;
         deleteTaskImg.alt = "Delete Button";
         deleteTaskImg.classList.add("taskButtonImages");
         deleteTaskBtn.appendChild(deleteTaskImg);
