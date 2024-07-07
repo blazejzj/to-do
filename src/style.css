@@ -84,7 +84,7 @@ body, html {
             color: #fff;
     
             #todo-icon {
-                background-image: url(/asset/clipboard-white.png);
+                background-image: url(../asset/clipboard-white.png);
                 width: 50px;
                 height: 50px;
             }
@@ -257,6 +257,21 @@ button {
             margin: 0;
         }
 
+    }
+}
+
+.project {
+    display: flex;
+    align-items: center;
+
+    > div {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        button {
+            margin: 0;
+        }
     }
 }
 
@@ -720,6 +735,13 @@ input[type="checkbox"]:focus {
         height: 700px;
         min-width: 300px;
     }
+}
+
+@media screen and (max-width: 470px){
+    .projectNameForTask, .dueTaskDate {
+        display: none;
+    }
+
 }
 
 @media only screen and (max-width: 565px) {

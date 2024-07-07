@@ -21,11 +21,31 @@ class UI {
         projectTitleBtn.classList.add("buttonHover");
         projectTitleBtn.textContent = project.getTitle();
 
+        // Create container for project buttons
+        const projectButtonsContainer = document.createElement("div");
+
+        // Add possibility to delete that specific project
+        const deleteProjectBtn = document.createElement("button");
+        deleteProjectBtn.classList.add("deleteTaskBtn");
+
+        const deleteProjectImg = document.createElement("img");
+        deleteProjectImg.src = deleteBtnIcon;
+        deleteProjectImg.alt = "Delete Button";
+        deleteProjectImg.classList.add("taskButtonImages");
+        
+        deleteProjectBtn.appendChild(deleteProjectImg);
+        deleteProjectBtn.addEventListener("click", function() {
+            projectManager.removeProject(project.getId());
+            UI.displayAllProjectsDOMS();
+        });
+
+
         const projectTaskCounter = document.createElement("span");
         projectTaskCounter.classList.add("task-counter");
         projectTaskCounter.textContent = 0;
 
-        container.append(projectTitleBtn, projectTaskCounter);
+        projectButtonsContainer.append(deleteProjectBtn, projectTaskCounter);
+        container.append(projectTitleBtn, projectButtonsContainer);
 
         return container;
     };
@@ -125,6 +145,8 @@ class UI {
         deleteTaskImg.alt = "Delete Button";
         deleteTaskImg.classList.add("taskButtonImages");
         deleteTaskBtn.appendChild(deleteTaskImg);
+
+
         taskContainerSecond.append(showDetailsBtn, displayDueDate, editTaskBtn, deleteTaskBtn);
         taskContainer.appendChild(taskContainerSecond);
 
