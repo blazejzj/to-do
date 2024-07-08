@@ -36,8 +36,6 @@ class UI {
         deleteProjectBtn.appendChild(deleteProjectImg);
         deleteProjectBtn.addEventListener("click", function() {
             projectManager.removeProject(project.getId());
-            UI.refreshAllUI();
-
             // check first if this project is currently selected
             if (parseInt(DOMS.currentlySelectedDataId) === project.getId()) {
                 // Select the button with data id = 1 -> Button that shows all tasks
@@ -47,6 +45,8 @@ class UI {
                 // Display the content of the selected all tasks category
                 DOMS.showFilteredTaskBasedOnTime("all");
             };
+
+            UI.refreshAllUI();
         });
 
 
@@ -138,12 +138,10 @@ class UI {
         deleteTaskBtn.classList.add("deleteTaskBtn");
         // Delete that particular task upon clicking the button
         deleteTaskBtn.addEventListener("click", function() {
-            // Find the currently pressed project and its id (Thats where the task would be)
-            const currentlySelectedBtn = document.querySelector("[data-selected='true']");
-            const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
-
-            // Find the project in projectmanager by matching the IDs
-            const project = projectManager.getProjects().find((project) => project.getId() === currentProjectId); 
+            // locate the project that has the task stored in it
+            const project = projectManager.getProjects().find((project) => {
+                return project.getTasks().find((taskIteration) => taskIteration.getId() === task.getId());
+            });
 
             // Remove task & refresh
             project.removeTask(task.getId());
