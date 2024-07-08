@@ -9,14 +9,10 @@ class Task {
     constructor(title, description, dueDate, priority) {
         this.title = title;
         this.description = description;
-        this.dueDate = parseISO(dueDate);
+        this.dueDate = dueDate;
         this.priority = priority || "medium"; // default
         this.completed = false;
         this.id = Task.currentId++;
-    }
-
-    setTitle(newTitle) {
-        this.title = newTitle;
     }
 
     getTitle() {
@@ -38,9 +34,17 @@ class Task {
     getDueDate() {
         return this.dueDate;
     }
-    
+
+    getDescription() {
+        return this.description;
+    }
+
     getFormattedDate() {
         return format(this.dueDate, 'MMMM d');
+    }
+
+    setTitle(newTitle) {
+        this.title = newTitle;
     }
 
     setPriority(newPriority) {
@@ -52,13 +56,8 @@ class Task {
     }
 
     setDueDate(newDueDate) {
-        let newDate = parseISO(newDueDate);
-        if(isFuture(newDate)) {
-            this.dueDate = newDueDate
-        }
-        else {
-            Errors.wrongNewDate();
-        }
+        this.dueDate = newDueDate;
+
     }
     
     toggleCompleted() {

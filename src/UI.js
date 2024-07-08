@@ -1,7 +1,12 @@
 import { projectManager } from './projectManager';
 import { DOMS } from './dom';
 import { Task } from './task';
-import {startOfToday, endOfToday, addDays, addMonths } from 'date-fns';
+import {startOfToday, endOfToday, addDays, addMonths, sub } from 'date-fns';
+
+// Icon imports
+import editBtnIcon from "../asset/editBtn.svg";
+import deleteBtnIcon from '../asset/deleteBtn.svg';
+
 
 class UI {
 
@@ -16,11 +21,41 @@ class UI {
         projectTitleBtn.classList.add("buttonHover");
         projectTitleBtn.textContent = project.getTitle();
 
+        // Create container for project buttons
+        const projectButtonsContainer = document.createElement("div");
+
+        // Add possibility to delete that specific project
+        const deleteProjectBtn = document.createElement("button");
+        deleteProjectBtn.classList.add("deleteTaskBtn");
+
+        const deleteProjectImg = document.createElement("img");
+        deleteProjectImg.src = deleteBtnIcon;
+        deleteProjectImg.alt = "Delete Button";
+        deleteProjectImg.classList.add("removeProjectBtnImage");
+        
+        deleteProjectBtn.appendChild(deleteProjectImg);
+        deleteProjectBtn.addEventListener("click", function() {
+            projectManager.removeProject(project.getId());
+            UI.refreshAllUI();
+
+            // check first if this project is currently selected
+            if (parseInt(DOMS.currentlySelectedDataId) === project.getId()) {
+                // Select the button with data id = 1 -> Button that shows all tasks
+                const newSelectedButton = document.querySelector("[data-id='1']");
+                newSelectedButton.setAttribute("data-selected", "true");
+
+                // Display the content of the selected all tasks category
+                DOMS.showFilteredTaskBasedOnTime("all");
+            };
+        });
+
+
         const projectTaskCounter = document.createElement("span");
         projectTaskCounter.classList.add("task-counter");
         projectTaskCounter.textContent = 0;
 
-        container.append(projectTitleBtn, projectTaskCounter);
+        projectButtonsContainer.append(deleteProjectBtn, projectTaskCounter);
+        container.append(projectTitleBtn, projectButtonsContainer);
 
         return container;
     };
@@ -45,11 +80,11 @@ class UI {
             if (checkBoxTaskCompleted.checked) {
                 taskContainer.classList.add('completed');
                 task.toggleCompleted();
-                UI.updateTaskCounters();
+                UI.refreshAllUI();
             } else {
                 taskContainer.classList.remove('completed');
                 task.toggleCompleted();
-                UI.updateTaskCounters();
+                UI.refreshAllUI();
             }
         });
 
@@ -87,12 +122,14 @@ class UI {
         editTaskBtn.classList.add("editTaskBtn");
         // Allow editing a task (pop up)
         editTaskBtn.addEventListener("click", function() {
-            // Create popup, allow changing task values
+            // Edit task using the same popup as creating a new task
+            DOMS.editTask(task);
+            UI.refreshAllUI();
         });
 
         // Give edit button an icon
         const editTaskImg = document.createElement("img");
-        editTaskImg.src = "/asset/editBtn.svg";
+        editTaskImg.src = editBtnIcon;
         editTaskImg.alt = "Edit button";
         editTaskImg.classList.add("taskButtonImages");
         editTaskBtn.appendChild(editTaskImg);
@@ -110,16 +147,17 @@ class UI {
 
             // Remove task & refresh
             project.removeTask(task.getId());
-            UI.displayCurrentSelectedProjectContent(project);
-            UI.updateTaskCounters();
+            UI.refreshAllUI(project);
         });
 
         // Give delete button an icon
         const deleteTaskImg = document.createElement("img");
-        deleteTaskImg.src = "/asset/deleteBtn.svg";
+        deleteTaskImg.src = deleteBtnIcon;
         deleteTaskImg.alt = "Delete Button";
         deleteTaskImg.classList.add("taskButtonImages");
         deleteTaskBtn.appendChild(deleteTaskImg);
+
+
         taskContainerSecond.append(showDetailsBtn, displayDueDate, editTaskBtn, deleteTaskBtn);
         taskContainer.appendChild(taskContainerSecond);
 
@@ -139,6 +177,35 @@ class UI {
         return taskContainer;
         
     };
+
+    static refreshAllUI(project = null) {
+        UI.displayAllProjectsDOMS();
+        UI.updateTaskCounters();
+
+        // Display the updated project content only if the project is currently selected
+        const currentlySelectedBtn = document.querySelector("[data-selected='true']");
+        const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
+
+        if (project && project.getId() === currentProjectId) {
+            UI.displayCurrentSelectedProjectContent(project);
+        }
+        else {
+            switch(currentProjectId) {
+                case 1:
+                    DOMS.showFilteredTaskBasedOnTime("all");
+                    break;
+                case 2:
+                    DOMS.showFilteredTaskBasedOnTime("today");
+                    break;
+                case 3:
+                    DOMS.showFilteredTaskBasedOnTime("week");
+                    break;
+                case 4:
+                    DOMS.showFilteredTaskBasedOnTime("month");
+                    break;
+            };
+        };
+    }
 
     static addProjectDomToProjectsContainer(projectDOM) {
         const projectsContainer = document.getElementById("projects");

@@ -84,7 +84,7 @@ body, html {
             color: #fff;
     
             #todo-icon {
-                background-image: url(/asset/clipboard-white.png);
+                background-image: url(../asset/clipboard-white.png);
                 width: 50px;
                 height: 50px;
             }
@@ -107,6 +107,10 @@ body, html {
             align-items: center;
         }
         
+    }
+
+    #projects {
+        gap: 0;
     }
 
     .menu-container {
@@ -260,6 +264,21 @@ button {
     }
 }
 
+.project {
+    display: flex;
+    align-items: center;
+
+    > div {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        button {
+            margin: 0;
+        }
+    }
+}
+
 .editTaskBtn {
     img {
         height: 23px;
@@ -279,6 +298,16 @@ button {
 .taskButtonImages:hover {
     transition: filter 0.15s ease-in-out;
     filter: invert(58%) sepia(25%) saturate(936%) hue-rotate(314deg) brightness(101%) contrast(89%);
+}
+
+.removeProjectBtnImage {
+    margin-top: 6.5px;
+    filter: brightness(0) saturate(100%) invert(69%) sepia(20%) saturate(5099%) hue-rotate(313deg) brightness(107%) contrast(90%);
+}
+
+.removeProjectBtnImage:hover {
+    transition: filter 0.15s ease-in-out;
+    filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(23%) hue-rotate(331deg) brightness(98%) contrast(105%);
 }
 
 input[type="checkbox"] {
@@ -720,6 +749,13 @@ input[type="checkbox"]:focus {
         height: 700px;
         min-width: 300px;
     }
+}
+
+@media screen and (max-width: 470px){
+    .projectNameForTask, .dueTaskDate {
+        display: none;
+    }
+
 }
 
 @media only screen and (max-width: 565px) {

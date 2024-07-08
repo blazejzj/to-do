@@ -71,7 +71,7 @@ class DOMS {
         
         // After adding new project hide the UI and refresh all projects (show)
         UI.hideNewProjectPopup();
-        UI.displayAllProjectsDOMS();
+        UI.refreshAllUI();
     }
 
     static handleNewTaskFormSubmission(event) {
@@ -109,11 +109,7 @@ class DOMS {
         projectManager.getProjects().forEach((project) => {
             if (project.getId() == currentProjectId) {
                 project.addTask(newTask);
-                // Instantly display all tasks (update)
-                UI.displayCurrentSelectedProjectContent(project);
-                
-                // Upon adding tasks also update its counter
-                UI.updateTaskCounters();
+                UI.refreshAllUI(project);
             }
         });
     
@@ -123,12 +119,83 @@ class DOMS {
         document.querySelector(`.priority-btn[data-priority="medium"]`).classList.add('active');
         UI.hideNewTaskPopup();
     }
+
+    static editTask(task) {
+        // Display the new task popup
+        UI.showNewTaskPopup();
+    
+        // Fill the form with the task details
+    
+        // Prefill the title
+        document.getElementById("taskTitle").value = task.getTitle();
+    
+        // Prefill the description
+        document.getElementById("taskDescription").value = task.getDescription();
+    
+        // Prefill the due date
+        document.getElementById("taskDueDate").value = task.getDueDate();
+        
+        // Prefill the priority
+        document.getElementById("taskPriority").value = task.getPriority();
+        // Display the priority in the task popup
+        const priorityButtons = document.querySelectorAll(".priority-btn");
+        priorityButtons.forEach(button => {
+            button.classList.remove("active");
+            if (button.getAttribute("data-priority") === task.getPriority()) {
+                button.classList.add("active");
+            };
+        });
+    
+        // Change the submit btn text content to "Edit Task"
+        const submitBtn = document.querySelector(".taskSubmitBtn");
+        submitBtn.textContent = "Edit Task";
+    
+        // Modify the onclick function to update the task instead of creating a new one
+        submitBtn.onclick = function(event) {
+            event.preventDefault();
+    
+            // Get updated values from the form
+            const updatedTitle = document.getElementById('taskTitle').value;
+            const updatedDescription = document.getElementById('taskDescription').value;
+            const updatedPriority = document.getElementById('taskPriority').value;
+            const updatedDueDate = document.getElementById('taskDueDate').value;
+    
+            // Update the task with new values
+            task.setTitle(updatedTitle);
+            task.setDescription(updatedDescription);
+            task.setPriority(updatedPriority);
+            task.setDueDate(updatedDueDate);
+    
+            // Find the right project that has teh task inside of it
+            const projectWithTask = projectManager.getProjects().find((project) => project.getTasks().find((t) => t.getId() === task.getId()));
+    
+            if (projectWithTask) {
+                projectWithTask.updateTask(task); 
+                UI.refreshAllUI(projectWithTask);
+            }
+    
+            // Reset everything -> Hide the popup and reset forms
+            document.getElementById('newTaskForm').reset();
+            document.querySelector('.priority-btn.active').classList.remove('active');
+            document.querySelector(`.priority-btn[data-priority="medium"]`).classList.add('active');
+            
+            // Change back the event listener to create a new task
+            submitBtn.textContent = "Create Task";
+            submitBtn.onclick = function(event) {
+                event.preventDefault();
+                DOMS.handleNewTaskFormSubmission(event);
+            };
+
+            UI.hideNewTaskPopup();
+        };
+        UI.refreshAllUI();
+    };
     
 
     static selectButton(newlySelectedButton) {
 
         // Set the currently selected project id
-        this.currentlySelectedDataId = newlySelectedButton.getAttribute("data-id");
+        DOMS.currentlySelectedDataId = newlySelectedButton.getAttribute("data-id");
 
         // Fetch currently selected button
         let currentSelectedBtn = document.querySelector("[data-selected='true']");
@@ -146,7 +213,7 @@ class DOMS {
 
         // First 4 are default "buttons" displaying tasks by different criterias (all, today, week, month)
         if (![1, 2, 3, 4].includes(projectId)) {
-            UI.displayCurrentSelectedProjectContent(specificProject);
+            UI.refreshAllUI(specificProject);
         } else {
             Errors.emptyArray();
         }
