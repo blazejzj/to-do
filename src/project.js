@@ -29,6 +29,13 @@ class Project {
         this.tasks.length = amount;
     }
 
+    updateTask(updatedTask) {
+        const taskIndex = this.tasks.findIndex(task => task.getId() === updatedTask.getId());
+        if (taskIndex !== -1) {
+            this.tasks[taskIndex] = updatedTask;
+        }
+    }
+
     removeTask(taskId) {
         this.tasks = this.tasks.filter(task => task.getId() != taskId);
     }
