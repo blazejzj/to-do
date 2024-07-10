@@ -123,6 +123,10 @@ class DOMS {
     static editTask(task) {
         // Display the new task popup
         UI.showNewTaskPopup();
+
+        // Change the original add task header to edit task
+        const taskPopupHeader = document.querySelector('.taskPopupHeader');
+        taskPopupHeader.textContent = "Edit Task";
     
         // Fill the form with the task details
     
@@ -185,6 +189,9 @@ class DOMS {
                 event.preventDefault();
                 DOMS.handleNewTaskFormSubmission(event);
             };
+
+            // Reset the header
+            taskPopupHeader.textContent = "Add New Task";
 
             UI.hideNewTaskPopup();
         };
