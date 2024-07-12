@@ -120,6 +120,7 @@ class DOMS {
         projectManager.getProjects().forEach((project) => {
             if (project.getId() == currentProjectId) {
                 project.addTask(newTask);
+                projectManager.saveProjects(); // Save projects to the local storage
                 UI.refreshAllUI(project);
             }
         });
@@ -190,6 +191,8 @@ class DOMS {
                 projectWithTask.updateTask(task); 
                 UI.refreshAllUI(projectWithTask);
             }
+
+            projectManager.saveProjects(); // Save projects to the local storage
     
             // Reset the form and hide the popup
             DOMS.resetForm();
