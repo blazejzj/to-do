@@ -103,7 +103,10 @@ class DOMS {
     
         // Disallow user to set a due date before today
         if (isBefore(selectedDate, todayDate)) {
+            incorrectDateMsg.style.display = "block";
             return;
+        } else {
+            incorrectDateMsg.style.display = "none";
         }
     
         // If validated create new task object
@@ -176,6 +179,18 @@ class DOMS {
             const updatedTitle = document.getElementById('taskTitle').value;
             const updatedDescription = document.getElementById('taskDescription').value;
             const updatedPriority = document.getElementById('taskPriority').value;
+            
+            // Validate task due date before creating a task
+            const todayDate = startOfToday();
+            const selectedDate = parseISO(document.getElementById('taskDueDate').value);
+
+            if (isBefore(selectedDate, todayDate)) {
+                incorrectDateMsg.style.display = "block";
+                return;
+            } else {
+                incorrectDateMsg.style.display = "none";
+            }
+
             const updatedDueDate = document.getElementById('taskDueDate').value;
     
             // Update the task with new values
