@@ -78,39 +78,42 @@ class DOMS {
     }
 
     static handleNewTaskFormSubmission(event) {
-        event.preventDefault();
-    
+
+
+        // Try validating the forms before submitting (avoid empty fields)
         const form = event.target;
-    
+
         // Check form validity
         if (!form.checkValidity()) {
-            // If the form is invalid, let the browser display the validation messages
             form.reportValidity();
             return;
         }
+
+        event.preventDefault();
     
         // Form values from submitting a new task
-        const title = document.getElementById('taskTitle').value.trim();
-        const description = document.getElementById('taskDescription').value.trim();
+        const title = document.getElementById('taskTitle').value;
+        const description = document.getElementById('taskDescription').value;
         const priority = document.getElementById('taskPriority').value;
-        const dueDate = document.getElementById('taskDueDate').value.trim();
     
-        // Validate due date separately to ensure it's not before today
+        // Validate task due date before creating a task
+        const dueDate = document.getElementById('taskDueDate').value;
         const todayDate = startOfToday();
         const selectedDate = parseISO(dueDate);
-        const incorrectDateMsg = document.getElementById("incorrectDateMsg");
     
+        // Disallow user to set a due date before today
         if (isBefore(selectedDate, todayDate)) {
-            incorrectDateMsg.style.display = "initial";
             return;
-        } else {
-            incorrectDateMsg.style.display = "none";
         }
     
-        // If validated, create new task object
+        // If validated create new task object
         const newTask = new Task(title, description, dueDate, priority);
     
-        // Find currently selected project (its id)
+        /*
+        Find currently selected project (its id)
+        Match the id with the project in the list of all projects
+        Display all tasks from the selected project
+        */
         const currentlySelectedBtn = document.querySelector("[data-selected='true']");
         const currentProjectId = parseInt(currentlySelectedBtn.getAttribute("data-id"));
     
@@ -122,9 +125,12 @@ class DOMS {
         });
     
         // Reset everything -> Hide the popup and reset forms
-        this.resetForm();
+        document.getElementById('newTaskForm').reset();
+        document.querySelector('.priority-btn.active').classList.remove('active');
+        document.querySelector('.priority-btn[data-priority="medium"]').classList.add('active');
         UI.hideNewTaskPopup();
-    };
+    }
+    
     
 
     static editTask(task) {
