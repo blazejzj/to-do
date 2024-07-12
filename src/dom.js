@@ -308,9 +308,10 @@ class DOMS {
         // First 4 are default "buttons" displaying tasks by different criterias (all, today, week, month)
         if (![1, 2, 3, 4].includes(projectId)) {
             UI.refreshAllUI(specificProject);
-        } else {
-            Errors.emptyArray();
-        }
+        } 
+        // else {
+        //     Errors.emptyArray();
+        // }
     };
 
     static showFilteredTaskBasedOnTime(dueType) {

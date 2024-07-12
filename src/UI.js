@@ -146,7 +146,7 @@ class UI {
             });
 
             // Remove task & refresh
-            project.removeTask(task.getId());
+            project.removeTask(task.getId());   
             UI.refreshAllUI(project);
         });
 

@@ -68,7 +68,9 @@ class ProjectManager {
             });
             return project;
         });
-    };
+    }
+
+
 }
 
 export const projectManager = new ProjectManager();

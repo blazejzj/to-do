@@ -14,7 +14,6 @@ class storageLocal {
             try {
                 return JSON.parse(projects);
             } catch (error) {
-                console.log("Error parsing projects from localStorage:", error);
                 return []; 
             }
         }
