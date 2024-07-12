@@ -239,8 +239,6 @@ class DOMS {
     };
 
     static resetForm() {
-        UI.hideNewTaskPopup();
-        UI.refreshAllUI();
 
         // Reset the header
         document.querySelector(".taskPopupHeader").textContent = "Add New Task";
@@ -272,6 +270,14 @@ class DOMS {
         submitBtn.textContent = "Create Task";
         submitBtn.onclick = function(event) {
             event.preventDefault();
+            const form = document.getElementById('newTaskForm');
+            
+            // Check form validity
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
             DOMS.handleNewTaskFormSubmission(event);
     };
     }
