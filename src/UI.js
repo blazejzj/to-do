@@ -1,6 +1,5 @@
 import { projectManager } from './projectManager';
 import { DOMS } from './dom';
-import { Task } from './task';
 import {startOfToday, endOfToday, addDays, addMonths, sub } from 'date-fns';
 
 // Icon imports
@@ -114,6 +113,9 @@ class UI {
         const showDetailsBtn = document.createElement("button");
         showDetailsBtn.classList.add("taskShowDetailsBtn");
         showDetailsBtn.textContent = "Details";
+        showDetailsBtn.addEventListener("click", function() {
+            DOMS.displayTaskDetails(task);
+        });
 
         const displayDueDate = document.createElement("span");
         displayDueDate.textContent = task.getFormattedDate();

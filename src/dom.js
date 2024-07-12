@@ -27,6 +27,7 @@ class DOMS {
         this.newTaskForm.addEventListener('submit', (event) => this.handleNewTaskFormSubmission(event));
         this.priorityButtons = document.querySelectorAll('.priority-btn');
         this.taskPriorityInput = document.getElementById('taskPriority');
+        this.taskCancelBtn = document.querySelector('.taskCancelBtn');
     }
 
     static bindEventListeners() {
@@ -49,6 +50,8 @@ class DOMS {
                 this.taskPriorityInput.value = button.getAttribute('data-priority');
             });
         });
+
+        this.taskCancelBtn.addEventListener('click', () => UI.hideNewTaskPopup());
 
         // Default selected priority
         document.querySelector(`.priority-btn[data-priority="${this.taskPriorityInput.value}"]`).classList.add('active');
@@ -178,25 +181,90 @@ class DOMS {
                 UI.refreshAllUI(projectWithTask);
             }
     
-            // Reset everything -> Hide the popup and reset forms
-            document.getElementById('newTaskForm').reset();
-            document.querySelector('.priority-btn.active').classList.remove('active');
-            document.querySelector(`.priority-btn[data-priority="medium"]`).classList.add('active');
-            
-            // Change back the event listener to create a new task
-            submitBtn.textContent = "Create Task";
-            submitBtn.onclick = function(event) {
-                event.preventDefault();
-                DOMS.handleNewTaskFormSubmission(event);
-            };
-
-            // Reset the header
-            taskPopupHeader.textContent = "Add New Task";
+            // Reset the form and hide the popup
+            DOMS.resetForm();
 
             UI.hideNewTaskPopup();
         };
         UI.refreshAllUI();
     };
+
+    static displayTaskDetails(task) {
+        // Display the same form as for editing a task
+        UI.showNewTaskPopup();
+
+        // Prefill the form with the task details
+        document.getElementById("taskTitle").value = task.getTitle();
+        document.getElementById("taskDescription").value = task.getDescription();
+        document.getElementById("taskDueDate").value = task.getDueDate();
+        document.getElementById("taskPriority").value = task.getPriority();
+
+        // Hide all priority buttons apart from the one that matches the task priority
+        const priorityButtons = document.querySelectorAll(".priority-btn");
+        priorityButtons.forEach(button => {
+            button.style.display = "none";
+            if (button.getAttribute("data-priority") === task.getPriority()) {
+                button.style.display = "initial";
+                button.classList.add("active");
+            };
+        });
+
+        // Disable due date input
+        document.getElementById("taskDueDate").disabled = true;
+
+        // Hide submit button
+        document.querySelector(".taskSubmitBtn").style.display = "none";
+
+        // Change the header to "Task Details"
+        document.querySelector(".taskPopupHeader").textContent = "Task Details";
+
+        // Make the title and descriptio non-editable
+        document.getElementById("taskTitle").readOnly = true;
+        document.getElementById("taskDescription").readOnly = true;
+
+        // Upon clicking cancel button, hide the popup and reset it to its original state
+        document.querySelector(".taskCancelBtn").onclick = function() {
+            DOMS.resetForm();
+        };
+    };
+
+    static resetForm() {
+        UI.hideNewTaskPopup();
+        UI.refreshAllUI();
+
+        // Reset the header
+        document.querySelector(".taskPopupHeader").textContent = "Add New Task";
+
+        // Reset the form
+        document.getElementById('newTaskForm').reset();
+
+        // Make inputs editable again
+        document.getElementById("taskTitle").readOnly = false;
+        document.getElementById("taskDescription").readOnly = false;
+        document.getElementById("taskDueDate").disabled = false;
+
+        // Reset buttons
+        const priorityButtons = document.querySelectorAll(".priority-btn");
+        priorityButtons.forEach(button => {
+            button.style.display = "initial";
+            // Remove active class from all buttons apart from medium
+            button.classList.remove("active");
+            if (button.getAttribute("data-priority") === "medium") {
+                button.classList.add("active");
+            };
+        });
+
+        // Display submit button again
+        document.querySelector(".taskSubmitBtn").style.display = "initial";
+
+        // Reset the event listener
+        const submitBtn = document.querySelector(".taskSubmitBtn");
+        submitBtn.textContent = "Create Task";
+        submitBtn.onclick = function(event) {
+            event.preventDefault();
+            DOMS.handleNewTaskFormSubmission(event);
+    };
+    }
     
 
     static selectButton(newlySelectedButton) {
