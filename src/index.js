@@ -1,10 +1,13 @@
 import './style.css';
-import { Project } from './project'
-import { DOMS } from './dom'
-import { Errors } from './errors';
-import { Task } from './task';
+import { DOMS } from './dom';
 import { projectManager } from './projectManager';
+import { UI } from './UI'; // Ensure this import is correct
 
+// Load projects from local storage
+document.addEventListener('DOMContentLoaded', () => {
+    projectManager.loadProjects(); 
+    UI.refreshAllUI(); 
+});
 
 document.body.addEventListener('click', (event) => {
     // Check if the clicked element is a button with a 'data-id'

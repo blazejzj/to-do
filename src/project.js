@@ -1,3 +1,5 @@
+import { projectManager } from './projectManager.js';
+
 
 class Project {
 
@@ -38,6 +40,7 @@ class Project {
 
     removeTask(taskId) {
         this.tasks = this.tasks.filter(task => task.getId() != taskId);
+        projectManager.saveToLocalStorage();
     }
 
     addTask(newTask) {
