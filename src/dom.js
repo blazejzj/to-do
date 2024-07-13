@@ -28,6 +28,7 @@ class DOMS {
         this.priorityButtons = document.querySelectorAll('.priority-btn');
         this.taskPriorityInput = document.getElementById('taskPriority');
         this.taskCancelBtn = document.querySelector('.taskCancelBtn');
+        this.incorrectDateMsg = document.getElementById('incorrectDateMsg');
     }
 
     static bindEventListeners() {
@@ -103,10 +104,10 @@ class DOMS {
     
         // Disallow user to set a due date before today
         if (isBefore(selectedDate, todayDate)) {
-            incorrectDateMsg.style.display = "block";
+            this.incorrectDateMsg.style.display = "block";
             return;
         } else {
-            incorrectDateMsg.style.display = "none";
+            this.incorrectDateMsg.style.display = "none";
         }
     
         // If validated create new task object
@@ -185,10 +186,10 @@ class DOMS {
             const selectedDate = parseISO(document.getElementById('taskDueDate').value);
 
             if (isBefore(selectedDate, todayDate)) {
-                incorrectDateMsg.style.display = "block";
+                this.incorrectDateMsg.style.display = "block";
                 return;
             } else {
-                incorrectDateMsg.style.display = "none";
+                this.incorrectDateMsg.style.display = "none";
             }
 
             const updatedDueDate = document.getElementById('taskDueDate').value;
